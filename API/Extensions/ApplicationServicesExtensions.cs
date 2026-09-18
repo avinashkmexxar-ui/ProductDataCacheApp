@@ -22,9 +22,10 @@ namespace API.Extensions
             {
                 client.BaseAddress = new Uri(baseUrl);
             });
-            services.AddAutoMapper(config =>
+
+            services.AddAutoMapper(configuration =>
             {
-                config.AddProfile<ProductMappingProfile>();
+                configuration.AddProfile<ProductMappingProfile>();
             });
 
             return services;
