@@ -3,6 +3,7 @@ using Domain.Interfaces.Repositories;
 using Infrastructure.SQL;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace Infrastructure.Repositories
@@ -11,7 +12,9 @@ namespace Infrastructure.Repositories
     {
         public const string ConnectionStringName = "ProductCache";
         private readonly string _connectionString;
-        public ProductRepository(IConfiguration configuration)
+        private readonly ILogger<ProductRepository> _logger;
+        public ProductRepository(IConfiguration configuration,
+            ILogger<ProductRepository> logger)
         {
             var connectionString = configuration.GetConnectionString(ConnectionStringName);
             if (string.IsNullOrWhiteSpace(connectionString))
@@ -20,6 +23,7 @@ namespace Infrastructure.Repositories
                     $"Connection string  is not available.");
             }
             _connectionString = connectionString;
+            _logger = logger;
         }
 
         public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken)
@@ -33,9 +37,10 @@ namespace Infrastructure.Repositories
             await using var reader = await cmd.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
+                _logger.LogWarning("Product not found for ID: {ProductId}", id);
                 return null;
             }
-
+            _logger.LogDebug("Loaded cached product {ProductId}", id);
             return ProductUpsertTableMapper.MapProduct(reader);
         }
 
@@ -52,7 +57,7 @@ namespace Infrastructure.Repositories
             {
                 products.Add(ProductUpsertTableMapper.MapProduct(reader));
             }
-
+            _logger.LogDebug("Loaded cached products count: {ProductCount}", products.Count);
             return products;
         }
 
@@ -69,6 +74,7 @@ namespace Infrastructure.Repositories
 
             await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
             await cmd.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
+            _logger.LogInformation("Upserted {ProductCount} products into SQL Server", products.Count);
         }
     }
 }
