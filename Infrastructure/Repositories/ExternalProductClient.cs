@@ -4,6 +4,7 @@ using Domain.Interfaces.Repositories;
 using Shared.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -22,8 +23,7 @@ namespace Infrastructure.Repositories
         public async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken)
         {
             using var response = await _httpClient
-                .GetAsync("products?limit=1000", cancellationToken)
-                .ConfigureAwait(false);
+                .GetAsync("products?limit=1000", cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
@@ -33,9 +33,22 @@ namespace Infrastructure.Repositories
             return _mapper.Map<List<Product>>(payload?.Products ?? []);
         }
 
-        public Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken)
+        public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using var response = await _httpClient
+               .GetAsync($"products/{id}", cancellationToken);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            var payload = await response.Content
+                .ReadFromJsonAsync<ExternalProductDto>(cancellationToken);
+
+            return payload is null ? null : _mapper.Map<Product>(payload);
         }
     }
 }

@@ -19,5 +19,14 @@ namespace API.Controllers
             var response = await _productService.GetListAsync(cancellationToken);
             return StatusCode(response.Code, response);
         }
+
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetByIdAsync(int id,
+    CancellationToken cancellationToken)
+        {
+            var response = await _productService.GetByIdAsync(id, cancellationToken);
+            return StatusCode(response.Code, response);
+        }
     }
 }

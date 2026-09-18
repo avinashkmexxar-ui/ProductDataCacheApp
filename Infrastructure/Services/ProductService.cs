@@ -26,7 +26,45 @@ namespace Infrastructure.Services
         }
         public async Task<ResponseDto<ProductDetailDto>> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (id <= 0)
+            {
+                return new ResponseDto<ProductDetailDto>
+                {
+                    IsSuccess = false,
+                    Code = 400,
+                    Message = "Product id must be a positive integer."
+                };
+            }
+            var cached = await _productRepository.GetByIdAsync(id, cancellationToken);
+            if (cached is not null)
+            {
+                return new ResponseDto<ProductDetailDto>
+                {
+                    IsSuccess = true,
+                    Code = 200,
+                    Message = "Successfully retrieved",
+                    Data = _mapper.Map<ProductDetailDto>(cached)
+                };
+            }
+            var external = await _externalProductClient.GetByIdAsync(id, cancellationToken);
+            if (external is null)
+            {
+                return new ResponseDto<ProductDetailDto>
+                {
+                    IsSuccess = false,
+                    Code = 404,
+                    Message = $"Product {id} was not found."
+                };
+            }
+            await _productRepository.UpsertAsync([external], cancellationToken);
+            return new ResponseDto<ProductDetailDto>
+            {
+                IsSuccess = true,
+                Code = 200,
+                Message = "Successfully retrieved",
+                Data = _mapper.Map<ProductDetailDto>(external)
+            };
+
         }
 
         public async Task<ResponseDto<IReadOnlyList<ProductDetailDto>>> GetListAsync(CancellationToken cancellationToken)
