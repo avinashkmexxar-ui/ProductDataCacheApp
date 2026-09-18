@@ -8,9 +8,12 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Entities\" />
     <Folder Include="Interfaces\Services\" />
     <Folder Include="Interfaces\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
