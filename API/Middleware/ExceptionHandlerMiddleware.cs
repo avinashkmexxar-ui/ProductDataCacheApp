@@ -25,25 +25,14 @@ namespace API.Middleware
 
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            _logger.LogError(exception, "Unhandled exception. Occured");
-            int code;
-            
-
-            switch (exception)
+            _logger.LogError(exception, "Unhandled exception. Occured");  
+            var code = exception switch
             {
-                case HttpRequestException:
-                    code = StatusCodes.Status502BadGateway; 
-                    break;
-                case ArgumentException:
-                    code = StatusCodes.Status400BadRequest; 
-                    break;
-                case KeyNotFoundException:
-                    code = StatusCodes.Status404NotFound; 
-                    break;
-                default:
-                    code = StatusCodes.Status500InternalServerError; 
-                    break;
-            }
+                HttpRequestException => StatusCodes.Status502BadGateway,
+                ArgumentException => StatusCodes.Status400BadRequest,
+                KeyNotFoundException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError
+            };
 
             await context.Response.WriteAsJsonAsync(new ResponseDto<object>
             {
