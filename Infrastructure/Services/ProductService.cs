@@ -27,14 +27,8 @@ namespace Infrastructure.Services
         public async Task<ResponseDto<ProductDetailDto>> GetByIdAsync(int id, CancellationToken cancellationToken)
         {
             if (id <= 0)
-            {
-                return new ResponseDto<ProductDetailDto>
-                {
-                    IsSuccess = false,
-                    Code = 400,
-                    Message = "Product id must be a positive integer."
-                };
-            }
+                throw new ArgumentException("Product id must be a positive integer.");
+
             var cached = await _productRepository.GetByIdAsync(id, cancellationToken);
             if (cached is not null)
             {
@@ -48,14 +42,8 @@ namespace Infrastructure.Services
             }
             var external = await _externalProductClient.GetByIdAsync(id, cancellationToken);
             if (external is null)
-            {
-                return new ResponseDto<ProductDetailDto>
-                {
-                    IsSuccess = false,
-                    Code = 404,
-                    Message = $"Product {id} was not found."
-                };
-            }
+                throw new KeyNotFoundException("Product " + id + " was not found.");
+           
             await _productRepository.UpsertAsync([external], cancellationToken);
             return new ResponseDto<ProductDetailDto>
             {
@@ -63,8 +51,7 @@ namespace Infrastructure.Services
                 Code = 200,
                 Message = "Successfully retrieved",
                 Data = _mapper.Map<ProductDetailDto>(external)
-            };
-
+            }; 
         }
 
         public async Task<ResponseDto<IReadOnlyList<ProductDetailDto>>> GetListAsync(CancellationToken cancellationToken)
@@ -80,7 +67,7 @@ namespace Infrastructure.Services
             return new ResponseDto<IReadOnlyList<ProductDetailDto>>()
             {
                 IsSuccess = true,
-                Message = "Successfully Created",
+                Message = "Successfully retrieved",
                 Data = _mapper.Map<IReadOnlyList<ProductDetailDto>>(products)
             };
         }

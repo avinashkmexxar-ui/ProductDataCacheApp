@@ -1,4 +1,5 @@
 using API.Helpers;
+using API.Middleware;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Infrastructure.Repositories;
@@ -32,6 +33,7 @@ builder.Services.AddHttpClient<IExternalProductClient, ExternalProductClient>((s
 
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
