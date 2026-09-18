@@ -31,16 +31,11 @@ namespace API.Middleware
                 HttpRequestException => StatusCodes.Status502BadGateway,
                 ArgumentException => StatusCodes.Status400BadRequest,
                 KeyNotFoundException => StatusCodes.Status404NotFound,
+                InvalidOperationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
-
-            await context.Response.WriteAsJsonAsync(new ResponseDto<object>
-            {
-                IsSuccess = false,
-                Code = code,
-                Message = exception.Message,
-            });
-
+            await context.Response.WriteAsJsonAsync(ResponseDto<object>.Fail(code, exception.Message));
+             
         }
     }
 }
