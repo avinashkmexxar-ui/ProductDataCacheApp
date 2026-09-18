@@ -27,25 +27,21 @@ namespace API.Middleware
         {
             _logger.LogError(exception, "Unhandled exception. Occured");
             int code;
-            string message;
+            
 
             switch (exception)
             {
                 case HttpRequestException:
-                    code = StatusCodes.Status502BadGateway;
-                    message = exception.Message;
+                    code = StatusCodes.Status502BadGateway; 
                     break;
                 case ArgumentException:
-                    code = StatusCodes.Status400BadRequest;
-                    message = exception.Message;
+                    code = StatusCodes.Status400BadRequest; 
                     break;
                 case KeyNotFoundException:
-                    code = StatusCodes.Status404NotFound;
-                    message = exception.Message;
+                    code = StatusCodes.Status404NotFound; 
                     break;
                 default:
-                    code = StatusCodes.Status500InternalServerError;
-                    message = exception.Message;
+                    code = StatusCodes.Status500InternalServerError; 
                     break;
             }
 
@@ -53,7 +49,7 @@ namespace API.Middleware
             {
                 IsSuccess = false,
                 Code = code,
-                Message = message
+                Message = exception.Message,
             });
 
         }
