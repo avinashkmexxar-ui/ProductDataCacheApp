@@ -13,15 +13,20 @@ namespace API.Extensions
         {
             services.AddScoped<IProductService, ProductService>(); 
             services.AddScoped<IProductRepository, ProductRepository>();
+
+            var baseUrl = config["ExternalProductApi:BaseUrl"];
+            if (string.IsNullOrWhiteSpace(baseUrl))
+                throw new InvalidOperationException("'ExternalProductApi:BaseUrl' is not configured.");
+
             services.AddHttpClient<IExternalProductClient, ExternalProductClient>((sp, client) =>
             {
-                var baseUrl = "https://dummyjson.com/";
                 client.BaseAddress = new Uri(baseUrl);
             });
             services.AddAutoMapper(config =>
             {
                 config.AddProfile<ProductMappingProfile>();
             });
+
             return services;
         }
 
