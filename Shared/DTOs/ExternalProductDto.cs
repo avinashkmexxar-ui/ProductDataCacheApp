@@ -1,13 +1,13 @@
-﻿using Domain.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Entities
+namespace Shared.DTOs
 {
-    public sealed class Product : BaseEntity
+    public sealed class ExternalProductDto
     {
-        public string? Title { get; set; } = string.Empty;
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string? Category { get; set; }
         public decimal Price { get; set; }
