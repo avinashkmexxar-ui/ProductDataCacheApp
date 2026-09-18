@@ -33,14 +33,8 @@ namespace API.Middleware
                 KeyNotFoundException => StatusCodes.Status404NotFound,
                 _ => StatusCodes.Status500InternalServerError
             };
-
-            await context.Response.WriteAsJsonAsync(new ResponseDto<object>
-            {
-                IsSuccess = false,
-                Code = code,
-                Message = exception.Message,
-            });
-
+            await context.Response.WriteAsJsonAsync(ResponseDto<object>.Fail(code, exception.Message));
+             
         }
     }
 }

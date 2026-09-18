@@ -31,27 +31,14 @@ namespace Infrastructure.Services
 
             var cached = await _productRepository.GetByIdAsync(id, cancellationToken);
             if (cached is not null)
-            {
-                return new ResponseDto<ProductDetailDto>
-                {
-                    IsSuccess = true,
-                    Code = 200,
-                    Message = "Successfully retrieved",
-                    Data = _mapper.Map<ProductDetailDto>(cached)
-                };
-            }
+                return ResponseDto<ProductDetailDto>.Success(_mapper.Map<ProductDetailDto>(cached));
+
             var external = await _externalProductClient.GetByIdAsync(id, cancellationToken);
             if (external is null)
                 throw new KeyNotFoundException("Product " + id + " was not found.");
            
             await _productRepository.UpsertAsync([external], cancellationToken);
-            return new ResponseDto<ProductDetailDto>
-            {
-                IsSuccess = true,
-                Code = 200,
-                Message = "Successfully retrieved",
-                Data = _mapper.Map<ProductDetailDto>(external)
-            }; 
+            return ResponseDto<ProductDetailDto>.Success(_mapper.Map<ProductDetailDto>(external));
         }
 
         public async Task<ResponseDto<IReadOnlyList<ProductDetailDto>>> GetListAsync(CancellationToken cancellationToken)
@@ -63,13 +50,7 @@ namespace Infrastructure.Services
                 await _productRepository.UpsertAsync(external, cancellationToken);
                 products = await _productRepository.GetListAsync(cancellationToken);
             }
-             
-            return new ResponseDto<IReadOnlyList<ProductDetailDto>>()
-            {
-                IsSuccess = true,
-                Message = "Successfully retrieved",
-                Data = _mapper.Map<IReadOnlyList<ProductDetailDto>>(products)
-            };
+            return ResponseDto<IReadOnlyList<ProductDetailDto>>.Success(_mapper.Map<IReadOnlyList<ProductDetailDto>>(products));
         }
     } 
 }
