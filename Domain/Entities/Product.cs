@@ -1,13 +1,10 @@
-﻿using Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Common; 
 
 namespace Domain.Entities
 {
     public sealed class Product : BaseEntity
     {
-        public string? Title { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string? Category { get; set; }
         public decimal Price { get; set; }
