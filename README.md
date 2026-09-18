@@ -6,3 +6,27 @@
 **System.Text.Json** (`ReadFromJsonAsync`) deserializes DummyJSON responses.
 
 ## Clone and run
+## Run with Visual Studio and LocalDB
+
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/avinashkmexxar-ui/ProductDataCacheApp.git
+cd ProductDataCacheApp
+```
+
+### 2. Create the database
+
+Run this from the **repository root** (the folder that contains `schema.sql`):
+
+```bash
+sqlcmd -S "(localdb)\MSSQLLocalDB" -i schema.sql
+```
+
+### 3. Open in Visual Studio and run
+
+1. Open `ProductDataCacheApp.slnx`.
+2. Right-click **API** → **Set as Startup Project**.
+3. Press **F5** (or **Ctrl+F5**).
+
+Swagger: https://localhost:7247/swagger
