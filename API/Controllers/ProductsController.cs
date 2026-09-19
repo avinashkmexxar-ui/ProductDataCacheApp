@@ -11,21 +11,30 @@ namespace API.Controllers
         private readonly IProductService _productService;
         public ProductsController(IProductService productService) => _productService = productService;
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)] 
-        public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetAllAsync(
-            CancellationToken cancellationToken)
-        {
-            var response = await _productService.GetListAsync(cancellationToken);
-            return StatusCode(response.Code, response);
-        }
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status200OK)] 
+        //public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetAllAsync(
+        //    CancellationToken cancellationToken)
+        //{
+        //    var response = await _productService.GetListAsync(cancellationToken);
+        //    return StatusCode(response.Code, response);
+        //}
 
-        [HttpGet("{id:int}")]
+        //[HttpGet("{id:int}")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetByIdAsync(int id,
+        //     CancellationToken cancellationToken)
+        //{
+        //    var response = await _productService.GetByIdAsync(id, cancellationToken);
+        //    return StatusCode(response.Code, response);
+        //}
+
+        [HttpGet("{id:int}/getProductWithReviews")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetByIdAsync(int id,
-    CancellationToken cancellationToken)
-        {
-            var response = await _productService.GetByIdAsync(id, cancellationToken);
+        public async Task<ActionResult<ResponseDto<ProductWithReviewsDto>>> GetWithProductReviewsProductByIdAsync(
+           int id, CancellationToken cancellationToken)
+        { 
+            var response = await _productService.GetByIdProductsWithReviewsAsync(id, cancellationToken); 
             return StatusCode(response.Code, response);
         }
     }

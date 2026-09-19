@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.Data.SqlClient;
+using Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ namespace Infrastructure.SQL
 {
     public static class ProductUpsertTableMapper
     {
-        public static DataTable ToDataTable(IReadOnlyList<Product> products)
+        public static DataTable ToDataTable(IReadOnlyList<ExternalProductDto> products)
         {
             var table = new DataTable();
             table.Columns.Add("Id", typeof(int));
@@ -73,6 +74,28 @@ namespace Infrastructure.SQL
                 AvailabilityStatus = reader.IsDBNull(reader.GetOrdinal("AvailabilityStatus")) ? null : reader.GetString(reader.GetOrdinal("AvailabilityStatus")),
                 ReturnPolicy = reader.IsDBNull(reader.GetOrdinal("ReturnPolicy")) ? null : reader.GetString(reader.GetOrdinal("ReturnPolicy")),
                 MinimumOrderQuantity = reader.GetInt32(reader.GetOrdinal("MinimumOrderQuantity"))
+            };
+        }
+        public static ProductWithReviewsDto MapSummariseProductWithProductReview(SqlDataReader reader)
+        {
+            return new ProductWithReviewsDto
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                Title = reader.GetString(reader.GetOrdinal("Title")),
+                Category = reader.IsDBNull(reader.GetOrdinal("Category")) ? null : reader.GetString(reader.GetOrdinal("Category")),
+                Price = reader.GetDecimal(reader.GetOrdinal("Price")),
+                Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
+                Brand = reader.IsDBNull(reader.GetOrdinal("Brand")) ? null : reader.GetString(reader.GetOrdinal("Brand")),
+                Reviews =
+                [
+                    new ExternalProductReviewDto
+                    { 
+                        Rating = reader.GetInt32(reader.GetOrdinal("ReviewRating")),
+                        Comment = reader.IsDBNull(reader.GetOrdinal("Comment")) ? null : reader.GetString(reader.GetOrdinal("Comment")), 
+                        ReviewerName = reader.IsDBNull(reader.GetOrdinal("ReviewerName")) ? null : reader.GetString(reader.GetOrdinal("ReviewerName")),
+                        ReviewerEmail = reader.IsDBNull(reader.GetOrdinal("ReviewerEmail")) ? null : reader.GetString(reader.GetOrdinal("ReviewerEmail"))
+                    }
+                ]
             };
         }
     }

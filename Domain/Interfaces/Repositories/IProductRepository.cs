@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,8 @@ namespace Domain.Interfaces.Repositories
     {
         Task<IReadOnlyList<Product>> GetListAsync(CancellationToken cancellationToken);
         Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken);
-        Task UpsertAsync(IReadOnlyList<Product> products, CancellationToken cancellationToken);
+        Task UpsertAsync(IReadOnlyList<ExternalProductDto> products, CancellationToken cancellationToken);
+        Task<ProductWithReviewsDto?> GetWithProductsReviewsByIdAsync(int id, CancellationToken cancellationToken);
+        Task CreateProductWithReviewsAsync(ExternalProductDto product, CancellationToken cancellationToken);
     }
 }
