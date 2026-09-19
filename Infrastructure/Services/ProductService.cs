@@ -51,7 +51,7 @@ namespace Infrastructure.Services
             _logger.LogInformation("GetList started. Checking for cached products");
 
             IReadOnlyList<Product> products = await _productRepository.GetListAsync(cancellationToken);
-            if (products.Count == 0)
+            if (products.Count < 100)
             {
                 _logger.LogInformation("No products found in cache. Fetching from external source.");
                 IReadOnlyList<Product> external = await _externalProductClient.GetAllAsync(cancellationToken);

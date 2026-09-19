@@ -9,7 +9,7 @@ namespace API.Helpers
         public ProductMappingProfile()
         {
             CreateMap<Product, ProductDetailDto>();
-            CreateMap<ExternalProductListDto, Product>();
+            CreateMap<ExternalProductDto, Product>();  
         }
     }
 }
