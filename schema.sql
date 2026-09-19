@@ -115,3 +115,24 @@ BEGIN
     END CATCH
 END
 GO
+
+
+--create table to store Product Reviews 
+
+IF TYPE_ID(N'Dbo.ProductReviews') IS NOT NULL
+    DROP TYPE dbo.ProductReviews;
+GO
+
+CREATE TABLE dbo.ProductReviews
+(
+    Id             INT IDENTITY(1,1) NOT NULL CONSTRAINT  PK_ProductReviews PRIMARY KEY,
+    ProductId      INT               NOT NULL CONSTRAINT FK_Reviews_Products FOREIGN KEY REFERENCES dbo.Products (Id),
+    Rating         INT               NOT NULL,
+    Comment        NVARCHAR(1000)    NULL,
+    ReviewDate     DATETIME2         NULL,
+    ReviewerName   NVARCHAR(200)     NULL,
+    ReviewerEmail  NVARCHAR(256)     NULL
+)
+GO
+
+
