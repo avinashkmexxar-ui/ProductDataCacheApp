@@ -73,5 +73,8 @@ namespace Infrastructure.SQL
             WHERE p.Id = @Id
             ORDER BY r.ReviewDate DESC, r.Id
             """;
+
+        public const string GetProductCount = $"SELECT COUNT(*) FROM {ProductTable}";
+
     }
 }

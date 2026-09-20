@@ -90,7 +90,7 @@ namespace Infrastructure.SQL
 
             product.Reviews.Add(new ExternalProductReviewDto
             {
-                Rating = reader.GetInt32(reader.GetOrdinal("Rating")),
+                Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
                 Comment = reader["Comment"] as string, 
                 Date = reader.IsDBNull(reader.GetOrdinal("ReviewDate")) ? null : reader.GetDateTime(reader.GetOrdinal("ReviewDate")),
                 ReviewerName = reader["ReviewerName"] as string,

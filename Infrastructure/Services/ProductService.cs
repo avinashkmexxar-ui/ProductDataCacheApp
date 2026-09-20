@@ -48,17 +48,19 @@ namespace Infrastructure.Services
 
         public async Task<ResponseDto<IReadOnlyList<ProductDetailDto>>> GetListAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("GetList started. Checking for cached products");
-
-            IReadOnlyList<Product> products = await _productRepository.GetListAsync(cancellationToken);
-            if (products.Count < 100)
+            _logger.LogInformation("GetList started. Checking for cached products"); 
+            IReadOnlyList<Product> products;  
+            var cachedCount = await _productRepository.GetCountAsync(cancellationToken);
+            var externatCount = await _externalProductClient.GetTotalCountAsync(cancellationToken);
+            if (cachedCount < externatCount)
             {
                 _logger.LogInformation("No products found in cache. Fetching from external source.");
                 IReadOnlyList<ExternalProductDto> external = await _externalProductClient.GetAllAsync(cancellationToken);
-                await _productRepository.UpsertAsync(external, cancellationToken);
-                products = await _productRepository.GetListAsync(cancellationToken);
+                await _productRepository.UpsertAsync(external, cancellationToken); 
             }
+            products = await _productRepository.GetListAsync(cancellationToken);
             return ResponseDto<IReadOnlyList<ProductDetailDto>>.Success(_mapper.Map<IReadOnlyList<ProductDetailDto>>(products));
         } 
     } 
 }
+ 

@@ -10,5 +10,6 @@ namespace Domain.Interfaces.Repositories
     {
         Task<IReadOnlyList<ExternalProductDto>> GetAllAsync(CancellationToken cancellationToken);
         Task<ExternalProductDto?> GetByIdAsync(int id, CancellationToken cancellationToken);
+        Task<int> GetTotalCountAsync(CancellationToken cancellationToken);
     }
 }

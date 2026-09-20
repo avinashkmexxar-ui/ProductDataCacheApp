@@ -143,7 +143,7 @@ CREATE TABLE dbo.ProductReviews
 GO
 
 
----SELECT p.Id, p.Title, p.Brand, p.Category, p.Price,
+-- SELECT p.Id, p.Title, p.Brand, p.Category, p.Price,
  --                  p.Rating, r.Id AS ReviewId, r.Rating AS ReviewRating, r.Comment,
  --                  r.ReviewDate, r.ReviewerName, r.ReviewerEmail
  --           FROM Products AS p
@@ -153,7 +153,7 @@ GO
 
 
 -- USE ProductCache;
---GO
+-- GO
 
 -- truncate table dbo.ProductReviews
 -- truncate table Products
@@ -161,3 +161,4 @@ GO
 -- DELETE FROM ProductReviews;
 
 --DELETE FROM Products;
+--select * from Products

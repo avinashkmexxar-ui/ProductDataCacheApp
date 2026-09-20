@@ -50,5 +50,17 @@ namespace Infrastructure.Repositories
 
             return _mapper.Map<ExternalProductDto>(payload);
         }
+        public async Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
+        {
+            using var response = await _httpClient
+                .GetAsync("products?limit=1", cancellationToken);
+
+            response.EnsureSuccessStatusCode();
+
+            var payload = await response.Content
+                .ReadFromJsonAsync<ExternalProductListDto>(cancellationToken);
+
+            return payload?.Total ?? 0;
+        }
     }
 }

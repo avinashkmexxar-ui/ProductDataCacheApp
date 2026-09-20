@@ -79,6 +79,17 @@ namespace Infrastructure.Repositories
             await cmd.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             _logger.LogInformation("Upserted {ProductCount} products into SQL Server", products.Count);
         }
- 
+
+        public async Task<int> GetCountAsync(CancellationToken cancellationToken)
+        {
+            await using var conn = new SqlConnection(_connectionString);
+            await using var cmd = conn.CreateCommand();
+            cmd.CommandText = Queries.GetProductCount;
+
+            await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
+            var result = await cmd.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            return Convert.ToInt32(result);
+        }
+
     }
 }

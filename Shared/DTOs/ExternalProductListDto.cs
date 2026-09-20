@@ -7,5 +7,6 @@ namespace Shared.DTOs
     public sealed class ExternalProductListDto
     {
         public List<ExternalProductDto> Products { get; set; } = [];
+        public int Total { get; set; }
     }
 }
