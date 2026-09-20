@@ -134,7 +134,7 @@ CREATE TABLE dbo.ProductReviews
 (
     Id             INT IDENTITY(1,1) NOT NULL CONSTRAINT  PK_ProductReviews PRIMARY KEY,
     ProductId      INT               NOT NULL CONSTRAINT FK_Reviews_Products FOREIGN KEY REFERENCES dbo.Products (Id),
-    Rating         INT               NOT NULL,
+    Rating         DECIMAL(9, 4)     NOT NULL,
     Comment        NVARCHAR(1000)    NULL,
     ReviewDate     DATETIME2         NULL,
     ReviewerName   NVARCHAR(200)     NULL,
@@ -149,4 +149,15 @@ GO
  --           FROM Products AS p
  --           INNER JOIN ProductReviews AS r ON r.ProductId = p.Id
  --           WHERE p.Id = 5
- --           ORDER BY r.ReviewDate DESC, r.Id
+ --           ORDER BY r.ReviewDate DESC, r.
+
+
+-- USE ProductCache;
+--GO
+
+-- truncate table dbo.ProductReviews
+-- truncate table Products
+
+-- DELETE FROM ProductReviews;
+
+--DELETE FROM Products;

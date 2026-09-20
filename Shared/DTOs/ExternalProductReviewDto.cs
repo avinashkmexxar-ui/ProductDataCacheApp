@@ -7,7 +7,7 @@ namespace Shared.DTOs
 {
     public sealed  class ExternalProductReviewDto
     {
-        public int Rating { get; set; }
+        public decimal Rating { get; set; }
         public string? Comment { get; set; }
         public DateTime? Date { get; set; }
         public string? ReviewerName { get; set; }

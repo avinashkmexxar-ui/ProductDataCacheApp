@@ -76,27 +76,27 @@ namespace Infrastructure.SQL
                 MinimumOrderQuantity = reader.GetInt32(reader.GetOrdinal("MinimumOrderQuantity"))
             };
         }
-        public static ProductWithReviewsDto MapSummariseProductWithProductReview(SqlDataReader reader)
+        public static ProductWithReviewsDto MapSummariseProductWithProductReview( SqlDataReader reader)
         {
-            return new ProductWithReviewsDto
+            var product = new ProductWithReviewsDto
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                 Title = reader.GetString(reader.GetOrdinal("Title")),
-                Category = reader.IsDBNull(reader.GetOrdinal("Category")) ? null : reader.GetString(reader.GetOrdinal("Category")),
+                Brand = reader["Brand"] as string,
+                Category = reader["Category"] as string,
                 Price = reader.GetDecimal(reader.GetOrdinal("Price")),
-                Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
-                Brand = reader.IsDBNull(reader.GetOrdinal("Brand")) ? null : reader.GetString(reader.GetOrdinal("Brand")),
-                Reviews =
-                [
-                    new ExternalProductReviewDto
-                    { 
-                        Rating = reader.GetInt32(reader.GetOrdinal("ReviewRating")),
-                        Comment = reader.IsDBNull(reader.GetOrdinal("Comment")) ? null : reader.GetString(reader.GetOrdinal("Comment")), 
-                        ReviewerName = reader.IsDBNull(reader.GetOrdinal("ReviewerName")) ? null : reader.GetString(reader.GetOrdinal("ReviewerName")),
-                        ReviewerEmail = reader.IsDBNull(reader.GetOrdinal("ReviewerEmail")) ? null : reader.GetString(reader.GetOrdinal("ReviewerEmail"))
-                    }
-                ]
-            };
+                Rating = reader.GetDecimal(reader.GetOrdinal("Rating"))
+            }; 
+
+            product.Reviews.Add(new ExternalProductReviewDto
+            {
+                Rating = reader.GetInt32(reader.GetOrdinal("Rating")),
+                Comment = reader["Comment"] as string, 
+                Date = reader.IsDBNull(reader.GetOrdinal("ReviewDate")) ? null : reader.GetDateTime(reader.GetOrdinal("ReviewDate")),
+                ReviewerName = reader["ReviewerName"] as string,
+                ReviewerEmail = reader["ReviewerEmail"] as string
+            }); 
+            return product;
         }
     }
 }

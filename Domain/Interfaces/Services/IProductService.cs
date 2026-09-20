@@ -9,8 +9,7 @@ namespace Domain.Interfaces.Services
     {
         Task<ResponseDto<IReadOnlyList<ProductDetailDto>>> GetListAsync(CancellationToken cancellationToken);
 
-        Task<ResponseDto<ProductDetailDto>> GetByIdAsync(int id, CancellationToken cancellationToken);
-        Task<ResponseDto<ProductWithReviewsDto>> GetByIdProductsWithReviewsAsync(int id,CancellationToken cancellationToken);
+        Task<ResponseDto<ProductDetailDto>> GetByIdAsync(int id, CancellationToken cancellationToken); 
 
     }
 }

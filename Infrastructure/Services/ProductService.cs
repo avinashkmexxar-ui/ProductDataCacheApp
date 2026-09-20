@@ -59,23 +59,6 @@ namespace Infrastructure.Services
                 products = await _productRepository.GetListAsync(cancellationToken);
             }
             return ResponseDto<IReadOnlyList<ProductDetailDto>>.Success(_mapper.Map<IReadOnlyList<ProductDetailDto>>(products));
-        }
-
-        public async Task<ResponseDto<ProductWithReviewsDto>> GetByIdProductsWithReviewsAsync(int id, CancellationToken cancellationToken)
-        {
-            if (id <= 0)
-                throw new ArgumentException("Product id must be a positive integer.");
-
-            ProductWithReviewsDto? cached = await _productRepository.GetWithProductsReviewsByIdAsync(id, cancellationToken);
-            if (cached is not null)
-                return ResponseDto<ProductWithReviewsDto>.Success(cached);
-
-            ExternalProductDto? external = await _externalProductClient.GetByIdAsync(id, cancellationToken);
-            if (external is null)
-                throw new KeyNotFoundException("Product " + id + " was not found.");
-
-            await _productRepository.CreateProductWithReviewsAsync(external, cancellationToken);
-            return ResponseDto<ProductWithReviewsDto>.Success(_mapper.Map<ProductWithReviewsDto>(external));
-        }
+        } 
     } 
 }
