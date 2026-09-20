@@ -30,3 +30,7 @@ sqlcmd -S "(localdb)\MSSQLLocalDB" -i schema.sql
 3. Press **F5** (or **Ctrl+F5**).
 
 Swagger: https://localhost:7247/swagger
+
+## Repository
+
+The latest changes and final assessment implementation are available in the `master` branch.
