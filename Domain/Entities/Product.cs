@@ -19,5 +19,6 @@ namespace Domain.Entities
         public string? AvailabilityStatus { get; set; }
         public string? ReturnPolicy { get; set; }
         public int MinimumOrderQuantity { get; set; }
+        public List<ProductReview>? Reviews { get; set; } = [];
     }
 }

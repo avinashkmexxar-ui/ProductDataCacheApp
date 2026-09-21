@@ -38,8 +38,13 @@ GO
 
 --- create Table Valued Parameter type for upsert operation
 
-IF TYPE_ID(N'dbo.ProductUpsertType') IS NOT NULL
-    DROP TYPE dbo.ProductUpsertType;
+-- IF TYPE_ID(N'dbo.ProductUpsertType') IS NOT NULL
+--    DROP TYPE dbo.ProductUpsertType;
+--GO
+DROP PROCEDURE IF EXISTS dbo.usp_UpsertProducts;
+GO
+
+DROP TYPE IF EXISTS dbo.ProductUpsertType;
 GO
 
 CREATE TYPE dbo.ProductUpsertType AS TABLE
@@ -64,6 +69,8 @@ CREATE TYPE dbo.ProductUpsertType AS TABLE
 GO
 
 -- create stored procedure for upsert operation
+
+
 CREATE PROCEDURE dbo.usp_UpsertProducts
     @Products dbo.ProductUpsertType READONLY
 AS
@@ -115,3 +122,43 @@ BEGIN
     END CATCH
 END
 GO
+
+
+--create table to store Product Reviews 
+
+IF TYPE_ID(N'Dbo.ProductReviews') IS NOT NULL
+    DROP TYPE dbo.ProductReviews;
+GO
+
+CREATE TABLE dbo.ProductReviews
+(
+    Id             INT IDENTITY(1,1) NOT NULL CONSTRAINT  PK_ProductReviews PRIMARY KEY,
+    ProductId      INT               NOT NULL CONSTRAINT FK_Reviews_Products FOREIGN KEY REFERENCES dbo.Products (Id),
+    Rating         DECIMAL(9, 4)     NOT NULL,
+    Comment        NVARCHAR(1000)    NULL,
+    ReviewDate     DATETIME2         NULL,
+    ReviewerName   NVARCHAR(200)     NULL,
+    ReviewerEmail  NVARCHAR(256)     NULL
+)
+GO
+
+
+-- SELECT p.Id, p.Title, p.Brand, p.Category, p.Price,
+ --                  p.Rating, r.Id AS ReviewId, r.Rating AS ReviewRating, r.Comment,
+ --                  r.ReviewDate, r.ReviewerName, r.ReviewerEmail
+ --           FROM Products AS p
+ --           INNER JOIN ProductReviews AS r ON r.ProductId = p.Id
+ --           WHERE p.Id = 5
+ --           ORDER BY r.ReviewDate DESC, r.
+
+
+-- USE ProductCache;
+-- GO
+
+-- truncate table dbo.ProductReviews
+-- truncate table Products
+
+-- DELETE FROM ProductReviews;
+
+--DELETE FROM Products;
+--select * from Products

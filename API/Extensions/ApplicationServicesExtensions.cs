@@ -14,6 +14,9 @@ namespace API.Extensions
             services.AddScoped<IProductService, ProductService>(); 
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            services.AddScoped<IProductReviewService, ProductReviewService>();
+            services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
+
             var baseUrl = config["ExternalProductApi:BaseUrl"];
             if (string.IsNullOrWhiteSpace(baseUrl))
                 throw new InvalidOperationException("'ExternalProductApi:BaseUrl' is not configured.");

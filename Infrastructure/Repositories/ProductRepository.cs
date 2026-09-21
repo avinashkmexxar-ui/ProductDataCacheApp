@@ -4,6 +4,7 @@ using Infrastructure.SQL;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Shared.DTOs;
 using System.Data;
 
 namespace Infrastructure.Repositories
@@ -61,7 +62,9 @@ namespace Infrastructure.Repositories
             return products;
         }
 
-        public async Task UpsertAsync(IReadOnlyList<Product> products, CancellationToken cancellationToken)
+        
+
+        public async Task UpsertAsync(IReadOnlyList<ExternalProductDto> products, CancellationToken cancellationToken)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = conn.CreateCommand();
@@ -76,5 +79,17 @@ namespace Infrastructure.Repositories
             await cmd.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             _logger.LogInformation("Upserted {ProductCount} products into SQL Server", products.Count);
         }
+
+        public async Task<int> GetCountAsync(CancellationToken cancellationToken)
+        {
+            await using var conn = new SqlConnection(_connectionString);
+            await using var cmd = conn.CreateCommand();
+            cmd.CommandText = Queries.GetProductCount;
+
+            await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
+            var result = await cmd.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            return Convert.ToInt32(result);
+        }
+
     }
 }
