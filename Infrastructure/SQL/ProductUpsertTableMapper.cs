@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.Data.SqlClient;
+using Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ namespace Infrastructure.SQL
 {
     public static class ProductUpsertTableMapper
     {
-        public static DataTable ToDataTable(IReadOnlyList<Product> products)
+        public static DataTable ToDataTable(IReadOnlyList<ExternalProductDto> products)
         {
             var table = new DataTable();
             table.Columns.Add("Id", typeof(int));
@@ -74,6 +75,28 @@ namespace Infrastructure.SQL
                 ReturnPolicy = reader.IsDBNull(reader.GetOrdinal("ReturnPolicy")) ? null : reader.GetString(reader.GetOrdinal("ReturnPolicy")),
                 MinimumOrderQuantity = reader.GetInt32(reader.GetOrdinal("MinimumOrderQuantity"))
             };
+        }
+        public static ProductWithReviewsDto MapSummariseProductWithProductReview( SqlDataReader reader)
+        {
+            var product = new ProductWithReviewsDto
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                Title = reader.GetString(reader.GetOrdinal("Title")),
+                Brand = reader["Brand"] as string,
+                Category = reader["Category"] as string,
+                Price = reader.GetDecimal(reader.GetOrdinal("Price")),
+                Rating = reader.GetDecimal(reader.GetOrdinal("Rating"))
+            }; 
+
+            product.Reviews.Add(new ExternalProductReviewDto
+            {
+                Rating = reader.GetDecimal(reader.GetOrdinal("Rating")),
+                Comment = reader["Comment"] as string, 
+                Date = reader.IsDBNull(reader.GetOrdinal("ReviewDate")) ? null : reader.GetDateTime(reader.GetOrdinal("ReviewDate")),
+                ReviewerName = reader["ReviewerName"] as string,
+                ReviewerEmail = reader["ReviewerEmail"] as string
+            }); 
+            return product;
         }
     }
 }

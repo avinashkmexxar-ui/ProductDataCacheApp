@@ -12,7 +12,7 @@ namespace API.Controllers
         public ProductsController(IProductService productService) => _productService = productService;
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)] 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetAllAsync(
             CancellationToken cancellationToken)
         {
@@ -23,10 +23,11 @@ namespace API.Controllers
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ResponseDto<IReadOnlyList<ProductDetailDto>>>> GetByIdAsync(int id,
-    CancellationToken cancellationToken)
+             CancellationToken cancellationToken)
         {
             var response = await _productService.GetByIdAsync(id, cancellationToken);
             return StatusCode(response.Code, response);
         }
+
     }
 }
