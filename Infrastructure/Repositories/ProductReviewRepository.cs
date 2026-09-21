@@ -28,8 +28,7 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<ProductWithReviewsDto?> GetWithProductsReviewsByIdAsync(int id, CancellationToken cancellationToken)
-        {
-            ProductWithReviewsDto? product = null;
+        { 
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = conn.CreateCommand();
             cmd.CommandText = Queries.GetProductWithReviewsById;
